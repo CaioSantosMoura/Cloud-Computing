@@ -8,7 +8,7 @@ connection.connect();
 
 // PEGAR TODOS OS USUARIOS CADASTRADOS
 app.get("/usuario", (req, res) => {
-    connection.query("SELECT * FROM Usuario", (error, results) => {
+    connection.query("SELECT * FROM usuario", (error, results) => {
         if (error) throw error;
         res.send(results);
     })
@@ -17,7 +17,7 @@ app.get("/usuario", (req, res) => {
 // PEGAR TODOS OS USUARIOS POR ID
 app.get("/usuario/:id", (req, res) => {
     const { id } = req.params;
-    connection.query(`SELECT * FROM Usuario WHERE id = ${id}`, (error, results) => {
+    connection.query(`SELECT * FROM usuario WHERE id = ${id}`, (error, results) => {
         if (error) throw error;
         res.send(results);
     })
@@ -29,7 +29,7 @@ app.use(express.json());
 app.post("/usuario", (req, res) => {
     const { id, nome, data_criacao } = req.body;
 
-    const query = "INSERT INTO Usuario (id, nome, data_criacao) VALUES (?, ?, ?)";
+    const query = "INSERT INTO usuario (id, nome, data_criacao) VALUES (?, ?, ?)";
     const values = [id, nome, data_criacao];
     connection.query(query, values, (error, results) => {
         if (error) {
@@ -46,7 +46,7 @@ app.post("/usuario", (req, res) => {
 app.delete("/usuario/userdeletebyid/:id", (req, res) => {
     const { id } = req.params;
 
-    const checkQuery = "SELECT * FROM Usuario WHERE id = ?";
+    const checkQuery = "SELECT * FROM usuario WHERE id = ?";
     connection.query(checkQuery, [id], (error, results) => {
         if (error) {
             console.error("Erro ao verificar usuário:", error);
@@ -57,10 +57,10 @@ app.delete("/usuario/userdeletebyid/:id", (req, res) => {
             return res.status(404).send({ error: "Usuário não encontrado" });
         }
 
-        const updateQuery = "UPDATE Usuario SET nome = ?, data_criacao = ? WHERE id = ?";
+        const updateQuery = "UPDATE usuario SET nome = ?, data_criacao = ? WHERE id = ?";
         const values = [nome, data_criacao, id];
 
-        connection.query(`DELETE FROM Usuario WHERE id = ${id}`, (error, results) => {
+        connection.query(`DELETE FROM usuario WHERE id = ${id}`, (error, results) => {
             if (error) {
                 console.error("Erro ao deletar dados:", error);
                 return res.status(500).send({ error: "Erro ao deletar dados do banco" });
@@ -77,7 +77,7 @@ app.put("/usuario/atualizarusuario/:id", (req, res) => {
     const { id } = req.params;
     const { nome, data_criacao } = req.body;
 
-    const checkQuery = "SELECT * FROM Usuario WHERE id = ?";
+    const checkQuery = "SELECT * FROM usuario WHERE id = ?";
     connection.query(checkQuery, [id], (error, results) => {
         if (error) {
             console.error("Erro ao verificar usuário:", error);
@@ -88,7 +88,7 @@ app.put("/usuario/atualizarusuario/:id", (req, res) => {
             return res.status(404).send({ error: "Usuário não encontrado" });
         }
 
-        const updateQuery = "UPDATE Usuario SET nome = ?, data_criacao = ? WHERE id = ?";
+        const updateQuery = "UPDATE usuario SET nome = ?, data_criacao = ? WHERE id = ?";
         const values = [nome, data_criacao, id];
         connection.query(updateQuery, values, (updateError, updateResults) => {
             if (updateError) {
