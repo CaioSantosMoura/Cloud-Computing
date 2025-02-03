@@ -9,36 +9,55 @@ const connection = mysql.createConnection({
    password: "",
    database: "mundo",
 });
+
 connection.connect();
 
-// PEGAR TODOS OS IMAGENS CADASTRADOS
-const getAllImages = (callback) => {
-   connection.query("SELECT * FROM imagem", (error, results) => {
-      if (error) throw error;
-      callback(null, results);
-   });
-};
+class ImagemRepository {
 
-// PEGAR TODOS OS IMAGENS POR ID
-const findById = (id, callback) => {
-   connection.query(
-      `SELECT * FROM imagem WHERE id = ?`,
-      [id],
-      (error, results) => {
-         if (error) throw error;
-         callback(null, results);
-      }
-   );
-};
+   getAll(callback) {
+       connection.query("SELECT * FROM imagem", (error, results) => {
+           if (error) return callback(error, null);
+           callback(null, results);
+       });
+   }
 
-app.use(express.json());
+   getById(id, callback) {
+       connection.query(
+           "SELECT * FROM imagem WHERE id = ?",
+           [id],
+           (error, results) => {
+               if (error) return callback(error, null);
+               callback(null, results[0]);
+           }
+       );
+   }
 
-// POSTA AS INFORMAÇÕES DO IMAGEM
-const postImage = (id, referencia, data_criacao, titulo, callback) => {
-    const query = "INSERT INTO imagem (id, referencia, data_criacao, titulo) VALUES (?, ?, ?, ?)";
-    const values = [id, referencia, data_criacao, titulo];
-    connection.query(query, values, (error, results) => {
-        if (error) throw error;
-        callback(null, results);
-    });
-};
+   create(imagem, callback) {
+       const query = "INSERT INTO imagem (id, referencia, titulo, data_criacao) VALUES (?, ?, NOW())";
+       const values = [imagem.id, imagem.referencia, imagem.titulo];
+       connection.query(query, values, (error, results) => {
+           if (error) return callback(error, null);
+           callback(null, results);
+       });
+   }
+
+   
+   update(id, imagem, callback) {
+      const query = "UPDATE imagem SET referencia = ?, data_criacao = ?, titulo = ? WHERE id = ?";
+      const values = [imagem.referencia, imagem.data_criacao, imagem.titulo, id];
+      connection.query(query, values, (error, results) => {
+          if (error) return callback(error, null);
+          callback(null, results);
+      });
+  }
+
+  delete(id, callback) {
+      const query = "DELETE FROM imagem WHERE id = ?";
+      connection.query(query, [id], (error, results) => {
+          if (error) return callback(error, null);
+          callback(null, results);
+      });
+  }
+}
+
+module.exports = new ImagemRepository();

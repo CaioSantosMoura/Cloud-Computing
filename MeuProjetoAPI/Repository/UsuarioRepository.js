@@ -9,36 +9,55 @@ const connection = mysql.createConnection({
    password: "",
    database: "mundo",
 });
+
 connection.connect();
 
-// PEGAR TODOS OS USUARIOS CADASTRADOS
-const getAllUsuarios = (callback) => {
-   connection.query("SELECT * FROM usuario", (error, results) => {
-      if (error) throw error;
-      callback(null, results);
-   });
-};
+class UsuarioRepository {
 
-// PEGAR TODOS OS USUARIOS POR ID
-const findById = (id, callback) => {
-   connection.query(
-      `SELECT * FROM usuario WHERE id = ?`,
-      [id],
-      (error, results) => {
-         if (error) throw error;
-         callback(null, results);
-      }
-   );
-};
+    getAll(callback) {
+        this.connection.query("SELECT * FROM usuario", (error, results) => {
+            if (error) return callback(error, null);
+            callback(null, results);
+        });
+    }
 
-app.use(express.json());
+    getById(id, callback) {
+        this.connection.query(
+            "SELECT * FROM usuario WHERE id = ?",
+            [id],
+            (error, results) => {
+                if (error) return callback(error, null);
+                callback(null, results[0]);
+            }
+        );
+    }
 
-// POSTA AS INFORMAÇÕES DO USUARIOS
-const postUsuarios = (id, nome, data_criacao, callback) => {
-    const query = "INSERT INTO usuario (id, nome, data_criacao) VALUES (?, ?, ?)";
-    const values = [id, nome, data_criacao];
-    connection.query(query, values, (error, results) => {
-        if (error) throw error;
-        callback(null, results);
-    });
-};
+    create(usuario, callback) {
+        const query = "INSERT INTO usuario (id, nome, data_criacao) VALUES (?, ?, ?)";
+        const values = [usuario.id, usuario.nome, usuario.data_criacao];
+        connection.query(query, values, (error, results) => {
+            if (error) return callback(error, null);
+            callback(null, results);
+        });
+    };
+
+    update(id, usuario, callback) {
+        const query = "UPDATE usuario SET nome = ?, data_criacao = ? WHERE id = ?";
+        const values = [usuario.nome, usuario.data_criacao, id];
+        this.connection.query(query, values, (error, results) => {
+            if (error) return callback(error, null);
+            callback(null, results);
+        });
+    }
+
+    delete(id, callback) {
+        const query = "DELETE FROM usuario WHERE id = ?";
+        this.connection.query(query, [id], (error, results) => {
+            if (error) return callback(error, null);
+            callback(null, results);
+        });
+    }
+
+}
+
+module.exports = new UsuarioRepository();

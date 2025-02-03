@@ -76,7 +76,7 @@ app.delete("/imagem/imgdeletebyid/:id", (req, res) => {
       const values = [referencia, data_criacao, titulo, id];
 
       connection.query(
-         `DELETE FROM Usuario WHERE id = ${id}`,
+         `DELETE FROM imagem WHERE id = ${id}`,
          (error, results) => {
             if (error) {
                console.error("Erro ao deletar dados:", error);
