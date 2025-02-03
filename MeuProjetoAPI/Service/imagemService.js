@@ -6,7 +6,7 @@ class ImagemService {
         if (image.titulo.length < 4) {
             throw new Error("Título deve ter pelo menos 5 caracteres");
         }
-        return await imagemRepository.create(image);
+        return imagemRepository.create(image);
     }
 
 }
