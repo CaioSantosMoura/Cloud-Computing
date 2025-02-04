@@ -1,4 +1,4 @@
-import imagemRepository from "../Repository/imagemRepository";
+import imagemRepository from "../Repository/ImagemRepository";
 
 class ImagemService {
 
@@ -6,7 +6,7 @@ class ImagemService {
         if (image.titulo.length < 4) {
             throw new Error("Título deve ter pelo menos 5 caracteres");
         }
-        return imagemRepository.create(image);
+        return await imagemRepository.create(image);
     }
 
 }

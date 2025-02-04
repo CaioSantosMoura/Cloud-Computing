@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-class ImagemRepository {
+class imagemRepository {
 
    getAll(callback) {
        connection.query("SELECT * FROM imagem", (error, results) => {
@@ -60,4 +60,4 @@ class ImagemRepository {
   }
 }
 
-module.exports = new ImagemRepository();
+module.exports = new imagemRepository();
