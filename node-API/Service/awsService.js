@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
 const repository = require("../repository/s3Repository");
-const imageService = require("./imageService");
+const imageService = require("./imagemService");
 
-const uploadImage = async (filePath, bucketName) => {
+const uploadImagem = async (filePath, bucketName) => {
    keyName = uuidv4();
 
    try {
@@ -14,7 +14,7 @@ const uploadImage = async (filePath, bucketName) => {
    }
 };
 
-const downloadImage = async (filePath, bucketName, keyName) => {
+const downloadImagem = async (filePath, bucketName, keyName) => {
    try {
       const path = await repository.downloadFile(filePath, bucketName, keyName);
       return { success: true, path };
@@ -24,6 +24,6 @@ const downloadImage = async (filePath, bucketName, keyName) => {
 };
 
 module.exports = {
-   uploadImage,
-   downloadImage,
+   uploadImagem,
+   downloadImagem,
 };

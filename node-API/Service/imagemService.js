@@ -1,60 +1,60 @@
-const image = require("../models/imageModel");
+const imagem = require("../Model/imagemModel");
 
-const addImage = async (req, ref) => {
+const addImagem = async (req) => {
    const ref = req.body.reference;
    const title = req.body.title;
 
    if (!title || title.trim() === "") throw new Error("Titulo está vazio!");
    if (!ref || ref.trim() === "") throw new Error("Referência está vazia!");
 
-   return await image.create({
+   return await imagem.create({
       referencia: ref,
       data_criacao: new Date(),
       titulo: title,
    });
 };
 
-const getImage = async (req) => {
+const getImagem = async (req) => {
    const title = req.params.title;
    if (!title || title.trim() === "") throw new Error("Titulo está vazio!");
 
-   return await image.findOne({ where: { titulo: title } });
+   return await imagem.findOne({ where: { titulo: title } });
 };
 
-const getAllImages = async () => {
-   return await image.findAll();
+const getAllImagems = async () => {
+   return await imagem.findAll();
 };
 
-const deleteImage = async (req) => {
+const deleteImagem = async (req) => {
    const title = req.params.title;
    if (!title || title.trim() === "") throw new Error("Titulo está vazio!");
 
-   return await image.destroy({ where: { titulo: title } });
+   return await imagem.destroy({ where: { titulo: title } });
 };
 
-const updateImage = async (req) => {
+const updateImagem = async (req) => {
    const title = req.params.title;
-   const imageFinded = await image.findOne({ where: { titulo: title } });
+   const imagemFinded = await imagem.findOne({ where: { titulo: title } });
 
-   if (!imageFinded) throw new Error("Imagem não encontrada!");
+   if (!imagemFinded) throw new Error("imagemm não encontrada!");
 
    const newTitle = req.body.title;
    const newReference = req.body.reference;
 
    if (newTitle != null) {
-      imageFinded.titulo = newTitle;
+      imagemFinded.titulo = newTitle;
    }
    if (newReference != null) {
-      imageFinded.referencia = newReference;
+      imagemFinded.referencia = newReference;
    }
 
-   return await imageFinded.save();
+   return await imagemFinded.save();
 };
 
 module.exports = {
-   addImage,
-   getImage,
-   getAllImages,
-   deleteImage,
-   updateImage,
+   addImagem,
+   getImagem,
+   getAllImagems,
+   deleteImagem,
+   updateImagem,
 };

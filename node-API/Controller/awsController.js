@@ -1,4 +1,4 @@
-const awsService = require("../service/awsService");
+const awsService = require("../Service/awsService");
 
 const uploadFile = async (req, res) => {
    const { filePath, bucketName } = req.body;
@@ -15,7 +15,7 @@ const downloadFile = async (req, res) => {
    const { filePath, bucketName, keyName } = req.body;
 
    try {
-      const result = await awsService.downloadImage(
+      const result = await awsService.downloadFile(
          filePath,
          bucketName,
          keyName

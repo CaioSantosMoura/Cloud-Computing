@@ -1,13 +1,13 @@
-const image = require("../models/imageModel");
-const imageService = require("../service/imageService");
+const imagem = require("../Model/imagemModel");
+const imagemService = require("../Service/imagemService");
 
-const addImage = async (req, res) => {
+const addImagem = async (req, res) => {
    try {
-      const image = await imageService.addImage(req);
+      const imagem = await imagemService.addImagem(req);
 
       res.status(200).json({
-         message: "Imagem adicionada com sucesso!",
-         image,
+         message: "imagemm adicionada com sucesso!",
+         imagem,
       });
    } catch (error) {
       res.status(500).json({
@@ -16,17 +16,17 @@ const addImage = async (req, res) => {
    }
 };
 
-const getImage = async (req, res) => {
+const getImagem = async (req, res) => {
    try {
-      const findImage = await imageService.findImage(req);
+      const findImagem = await imagemService.findImagem(req);
 
-      if (findImage) {
+      if (findImagem) {
          res.status(200).json({
-            image: findImage,
+            imagem: findImagem,
          });
       } else {
          res.status(404).json({
-            message: "Image not found!",
+            message: "Imagem not found!",
          });
       }
    } catch (error) {
@@ -36,17 +36,17 @@ const getImage = async (req, res) => {
    }
 };
 
-const getAllImages = async (req, res) => {
+const getAllImagems = async (req, res) => {
    try {
-      const findAllImages = await imageService.getAllImages();
+      const findAllImagems = await imagemService.getAllImagems();
 
-      if (findAllImages && findAllImages.length > 0) {
+      if (findAllImagems && findAllImagems.length > 0) {
          res.status(200).json({
-            images: findAllImages,
+            imagem: findAllImagems,
          });
       } else {
          res.status(404).json({
-            message: "Nenhuma imagem encontrada!",
+            message: "Nenhuma Imagem encontrada!",
          });
       }
    } catch (error) {
@@ -56,9 +56,9 @@ const getAllImages = async (req, res) => {
    }
 };
 
-const deleteImage = async (req, res) => {
+const deleteImagem = async (req, res) => {
    try {
-      const deleted = await imageService.deleteImage(req);
+      const deleted = await imagemService.deleteImagem(req);
 
       if (deleted) {
          res.status(200).json({
@@ -76,11 +76,11 @@ const deleteImage = async (req, res) => {
    }
 };
 
-const updateImage = async (req, res) => {
+const updateImagem = async (req, res) => {
    try {
-      const alterImage = await imageService.updateImage(req);
+      const alterarImagem = await imagemService.updateImagem(req);
 
-      if (alterImage) {
+      if (alterarImagem) {
          res.status(200).json({
             message: "Imagem modificada com sucesso!",
          });
@@ -97,9 +97,9 @@ const updateImage = async (req, res) => {
 };
 
 module.exports = {
-   addImage,
-   getImage,
-   getAllImages,
-   deleteImage,
-   updateImage,
+   addImagem,
+   getImagem,
+   getAllImagems,
+   deleteImagem,
+   updateImagem,
 };

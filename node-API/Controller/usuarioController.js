@@ -1,13 +1,13 @@
-const user = require("../models/userModel");
-const userService = require("../service/userService");
+const usuario = require("../Model/usuarioModel");
+const usuarioService = require("../Service/usuarioService");
 
-const addUser = async (req, res) => {
+const addUsuario = async (req, res) => {
    try {
-      const user = await userService.addUser(req);
+      const usuario = await usuarioService.addUsuario(req);
 
       res.status(200).json({
          message: "Usuário criado com sucesso!",
-         user,
+         usuario,
       });
    } catch (error) {
       res.status(500).json({
@@ -16,13 +16,13 @@ const addUser = async (req, res) => {
    }
 };
 
-const getUser = async (req, res) => {
+const getUsuario = async (req, res) => {
    try {
-      const findUser = await userService.getUser(req);
+      const findUsuario = await usuarioService.getUsuario(req);
 
-      if (findUser) {
+      if (findUsuario) {
          res.status(200).json({
-            findUser,
+            findUsuario,
          });
       } else {
          res.status(404).json({
@@ -36,13 +36,13 @@ const getUser = async (req, res) => {
    }
 };
 
-const getAllUsers = async (req, res) => {
+const getAllUsuarios = async (req, res) => {
    try {
-      const findAllUsers = await user.findAll();
+      const findAllUsuarios = await usuario.findAll();
 
-      if (findAllUsers) {
+      if (findAllUsuarios) {
          res.status(200).json({
-            users: findAllUsers,
+            usuarios: findAllUsuarios,
          });
       } else {
          res.status(404).json({
@@ -56,9 +56,9 @@ const getAllUsers = async (req, res) => {
    }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUsuario = async (req, res) => {
    try {
-      const deleted = await userService.deleteUser(req);
+      const deleted = await usuarioService.deleteUsuario(req);
 
       if (deleted) {
          res.status(200).json({
@@ -76,14 +76,14 @@ const deleteUser = async (req, res) => {
    }
 };
 
-const updateUser = async (req, res) => {
+const updateUsuario = async (req, res) => {
    try {
-      const alterUser = await userService.updateUser(req);
+      const alterarUsuario = await usuarioService.updateUsuario(req);
 
-      if (alterUser) {
+      if (alterarUsuario) {
          res.status(200).json({
             message: "Usuário modificado com sucesso!",
-            alterUser,
+            alterarUsuario,
          });
       } else {
          res.status(404).json({
@@ -98,9 +98,9 @@ const updateUser = async (req, res) => {
 };
 
 module.exports = {
-   addUser,
-   getUser,
-   getAllUsers,
-   deleteUser,
-   updateUser,
+   addUsuario,
+   getUsuario,
+   getAllUsuarios,
+   deleteUsuario,
+   updateUsuario,
 };

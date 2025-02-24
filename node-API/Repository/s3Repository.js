@@ -1,39 +1,58 @@
-const s3 = require("../config/awsConfig.js");
-const fs = require("fs");
+const AWS = require('aws-sdk');
 
-class s3Repository {
-   static uploadFile = (filePath, bucketName, keyName) => {
-      const fileContent = fs.readFileSync(filePath);
+// Configuração das credenciais AWS
+AWS.config.update({
+  region: 'us-east-1',  // Substitua pela sua região
+  accessKeyId: 'SEU_ACCESS_KEY',
+  secretAccessKey: 'SEU_SECRET_KEY'
+});
 
-      const params = {
-         Bucket: bucketName, // Nome do seu bucket S3
-         Key: keyName, // Nome do arquivo no S3
-         Body: fileContent, // Conteúdo do arquivo
-      };
+// Criação da instância do S3
+const s3 = new AWS.S3();
 
-      s3.upload(params, (err, data) => {
-         if (err) {
-            console.error("Erro ao fazer o upload:", err);
-         } else {
-            console.log("Arquivo carregado com sucesso:", data.Location);
-         }
-      });
-   };
 
-   static downloadFile = (bucketName, keyName, downloadPath) => {
-      const params = {
-         Bucket: bucketName,
-         Key: keyName,
-      };
+const fs = require('fs');
 
-      const file = fs.createWriteStream(downloadPath);
+// Função para fazer o upload de um arquivo
 
-      s3.getObject(params).createReadStream().pipe(file);
+// const ref = UUID.new()
+const uploadFile = (filePath, bucketName, keyName) => {
+  const fileContent = fs.readFileSync(filePath);
 
-      file.on("close", () => {
-         console.log("Arquivo baixado com sucesso:", downloadPath);
-      });
-   };
-}
+  const params = {
+    Bucket: bucketName,  // Nome do seu bucket S3
+    Key: keyName,        // Nome do arquivo no S3
+    Body: fileContent    // Conteúdo do arquivo
+  };
 
-module.exports = s3Repository;
+  s3.upload(params, (err, data) => {
+    if (err) {
+      console.error('Erro ao fazer o upload:', err);
+    } else {
+      console.log('Arquivo carregado com sucesso:', data.Location);
+    }
+  });
+};
+
+// Exemplo de uso
+uploadFile('./caminho/do/seu/arquivo.txt', 'nome-do-seu-bucket', 'arquivo-no-s3.txt');
+
+
+// Função para baixar um arquivo do S3
+const downloadFile = (bucketName, keyName, downloadPath) => {
+    const params = {
+      Bucket: bucketName,
+      Key: keyName
+    };
+  
+    const file = fs.createWriteStream(downloadPath);
+  
+    s3.getObject(params).createReadStream().pipe(file);
+  
+    file.on('close', () => {
+      console.log('Arquivo baixado com sucesso:', downloadPath);
+    });
+  };
+  
+  // Exemplo de uso
+  downloadFile('nome-do-seu-bucket', 'arquivo-no-s3.txt', './caminho/do/arquivo-baixado.txt');
