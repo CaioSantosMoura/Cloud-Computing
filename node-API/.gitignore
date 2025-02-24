@@ -1,0 +1,21 @@
+# Ignora arquivos de configuração local
+.env
+
+# Ignora dependências do Node.js
+node_modules/
+
+# Ignora arquivos de log
+*.log
+
+# Ignora arquivos de IDE
+.idea/
+.vscode/
+
+# Ignora arquivos de sistema
+.DS_Store
+
+# Ignora uma pasta específica
+/config/
+
+# Ignora um arquivo específico
+/arquivo.txt
