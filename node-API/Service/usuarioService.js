@@ -4,10 +4,10 @@ const addUsuario = async (req) => {
    const name = req.body.name;
    if (!name || name.trim() === "") throw new Error("Nome está vazio!");
 
-   return await (newusuario = usuario.create({
+   return await usuario.create({
       nome: name,
       data_criacao: new Date(),
-   }));
+   });   
 };
 
 const getUsuario = async (req) => {

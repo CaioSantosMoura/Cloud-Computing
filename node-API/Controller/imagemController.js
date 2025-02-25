@@ -2,6 +2,7 @@ const imagem = require("../Model/imagemModel");
 const imagemService = require("../Service/imagemService");
 
 const addImagem = async (req, res) => {
+   console.log("rtdt7rdrtdterd5"+req.body)
    try {
       const imagem = await imagemService.addImagem(req);
 

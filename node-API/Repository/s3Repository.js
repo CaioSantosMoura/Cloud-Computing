@@ -1,58 +1,67 @@
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
+const fs = require("fs");
 
-// Configuração das credenciais AWS
 AWS.config.update({
-  region: 'us-east-1',  // Substitua pela sua região
-  accessKeyId: 'SEU_ACCESS_KEY',
-  secretAccessKey: 'SEU_SECRET_KEY'
+    region: 'us-east-1',  // Substitua pela sua região
+    accessKeyId: 'AKIA5RRHCKYZSZDVDH77',
+    secretAccessKey: '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'
 });
 
-// Criação da instância do S3
 const s3 = new AWS.S3();
+const path = require('path');
 
+const uploadFile = async (filePath, bucketName, keyName) => {
+    try {
+        if (!filePath) {
+            throw new Error("Caminho do arquivo não pode ser undefined.");
+        }
 
-const fs = require('fs');
+        console.log("Iniciando upload do arquivo:", filePath);
 
-// Função para fazer o upload de um arquivo
+        const fileContent = fs.readFileSync(filePath);
+        const params = { Bucket: bucketName, Key: keyName, Body: fileContent };
 
-// const ref = UUID.new()
-const uploadFile = (filePath, bucketName, keyName) => {
-  const fileContent = fs.readFileSync(filePath);
+        // Realiza o upload
+        const data = await s3.upload(params).promise();
 
-  const params = {
-    Bucket: bucketName,  // Nome do seu bucket S3
-    Key: keyName,        // Nome do arquivo no S3
-    Body: fileContent    // Conteúdo do arquivo
-  };
+        // Verifica o retorno do upload
+        console.log("Resposta do upload S3:", data); // Log para depuração
 
-  s3.upload(params, (err, data) => {
-    if (err) {
-      console.error('Erro ao fazer o upload:', err);
-    } else {
-      console.log('Arquivo carregado com sucesso:', data.Location);
+        if (!data || !data.Location) {
+            throw new Error("Falha no upload para o S3, a propriedade 'Location' está ausente.");
+        }
+
+        // Extrai o tipo de imagem a partir da extensão do arquivo
+        const fileExtension = path.extname(filePath).toLowerCase();
+        if (!fileExtension) {
+            throw new Error("Tipo de arquivo não detectado.");
+        }
+
+        console.log("Upload bem-sucedido. Tipo de imagem:", fileExtension);
+        return { location: data.Location, fileExtension };
+    } catch (error) {
+        console.error("Erro no upload:", error.message);
+        throw error;
     }
-  });
 };
 
-// Exemplo de uso
-uploadFile('./caminho/do/seu/arquivo.txt', 'nome-do-seu-bucket', 'arquivo-no-s3.txt');
 
 
-// Função para baixar um arquivo do S3
-const downloadFile = (bucketName, keyName, downloadPath) => {
-    const params = {
-      Bucket: bucketName,
-      Key: keyName
-    };
-  
-    const file = fs.createWriteStream(downloadPath);
-  
-    s3.getObject(params).createReadStream().pipe(file);
-  
-    file.on('close', () => {
-      console.log('Arquivo baixado com sucesso:', downloadPath);
-    });
-  };
-  
-  // Exemplo de uso
-  downloadFile('nome-do-seu-bucket', 'arquivo-no-s3.txt', './caminho/do/arquivo-baixado.txt');
+const downloadFile = async (bucketName, keyName, downloadPath) => {
+    try {
+        const params = {
+            Bucket: bucketName,
+            Key: keyName,
+        };
+
+        const data = await s3.getObject(params).promise();
+
+        fs.writeFileSync(downloadPath, data.Body);
+        return downloadPath;
+    } catch (error) {
+        throw new Error("Erro no download: " + error.message);
+    }
+};
+
+module.exports = { uploadFile, downloadFile };
+
