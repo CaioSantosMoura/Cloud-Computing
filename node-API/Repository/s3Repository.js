@@ -3,8 +3,8 @@ const fs = require("fs");
 
 AWS.config.update({
     region: 'us-east-1',  // Substitua pela sua região
-    accessKeyId: 'AKIA5RRHCKYZSZDVDH77',
-    secretAccessKey: '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'
+    accessKeyId: '',
+    secretAccessKey: ''
 });
 
 const s3 = new AWS.S3();
