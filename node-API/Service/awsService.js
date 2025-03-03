@@ -1,5 +1,4 @@
 const repository = require("../Repository/s3Repository");
-const imagemService = require("./imagemService");
 
 const uploadFile = async (filePath, bucketName, keyName) => {
    try {
@@ -11,7 +10,6 @@ const uploadFile = async (filePath, bucketName, keyName) => {
       }
 
       console.log("Upload bem-sucedido, salvando no imageService...");
-      // await imagemService.addImagem(filePath, keyName);
 
       return { success: true, location: data.Location };
    } catch (err) {
@@ -21,9 +19,9 @@ const uploadFile = async (filePath, bucketName, keyName) => {
 };
 
 
-const downloadFile = async (bucketName, keyName, filePath) => {
+const downloadFile = async (filePath, bucketName, keyName) => {
    try {
-      const path = await repository.downloadFile(bucketName, keyName, filePath);
+      const path = await repository.downloadFile(filePath, bucketName, keyName);
       return { success: true, path };
    } catch (err) {
       console.error("Erro ao fazer download:", err.message);

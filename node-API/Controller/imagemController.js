@@ -1,4 +1,4 @@
-const imagem = require("../Model/imagemModel");
+const imagem = require("../model/imagemModel");
 const imagemService = require("../Service/imagemService");
 
 const addImagem = async (req, res) => {

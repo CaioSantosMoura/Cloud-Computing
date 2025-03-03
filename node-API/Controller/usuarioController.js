@@ -1,5 +1,5 @@
-const usuario = require("../Model/usuarioModel");
-const usuarioService = require("../Service/usuarioService");
+const usuario = require("../model/usuarioModel");
+const usuarioService = require("../service/usuarioService");
 
 const addUsuario = async (req, res) => {
    try {

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const usuarioController = require("../Controller/usuarioController");
-const imagemController = require("../Controller/imagemController");
-const awsController = require("../Controller/awsController");
+const usuarioController = require("../controller/usuarioController");
+const imagemController = require("../controller/imagemController");
+const awsController = require("../controller/awsController");
 
 router.post("/add_user", usuarioController.addUsuario);
 router.get("/get_user/:name", usuarioController.getUsuario);
