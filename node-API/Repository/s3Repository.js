@@ -10,6 +10,15 @@ AWS.config.update({
 const s3 = new AWS.S3();
 const path = require('path');
 
+const mysql = require("mysql2");
+
+const dbConnection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 's3'
+});
+
 const uploadFile = async (filePath, bucketName, keyName) => {
     try {
         if (!filePath) {
@@ -21,31 +30,40 @@ const uploadFile = async (filePath, bucketName, keyName) => {
         const fileContent = fs.readFileSync(filePath);
         const params = { Bucket: bucketName, Key: keyName, Body: fileContent };
 
-        // Realiza o upload
         const data = await s3.upload(params).promise();
 
-        // Verifica o retorno do upload
-        console.log("Resposta do upload S3:", data); // Log para depuração
+        console.log("Resposta do upload S3:", data);
 
         if (!data || !data.Location) {
-            throw new Error("Falha no upload para o S3, a propriedade 'Location' está ausente.");
+            throw new Error("Falha no upload para o S3.");
         }
 
-        // Extrai o tipo de imagem a partir da extensão do arquivo
         const fileExtension = path.extname(filePath).toLowerCase();
         if (!fileExtension) {
             throw new Error("Tipo de arquivo não detectado.");
         }
 
         console.log("Upload bem-sucedido. Tipo de imagem:", fileExtension);
+
+        const dataCriacao = new Date();
+        const nomeImagem = path.basename(filePath);
+
+        const query = `INSERT INTO tb_imagens (referencia, data_criacao, titulo) VALUES (?, ?, ?)`;
+
+        dbConnection.execute(query, [data.Location, dataCriacao, nomeImagem], (err, results) => {
+            if (err) {
+                console.error("Erro ao inserir no banco:", err.message);
+                throw err;
+            }
+            console.log("Imagem inserida no banco com sucesso:", results);
+        });
+
         return { location: data.Location, fileExtension };
     } catch (error) {
         console.error("Erro no upload:", error.message);
         throw error;
     }
 };
-
-
 
 const downloadFile = async (bucketName, keyName, downloadPath) => {
     try {

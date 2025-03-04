@@ -1,4 +1,8 @@
 const repository = require("../Repository/s3Repository");
+const AWS = require("aws-sdk");
+const fs = require("fs");
+const s3 = new AWS.S3();
+const path = require('path');
 
 const uploadFile = async (filePath, bucketName, keyName) => {
    try {
@@ -18,14 +22,21 @@ const uploadFile = async (filePath, bucketName, keyName) => {
    }
 };
 
-
-const downloadFile = async (filePath, bucketName, keyName) => {
+const downloadFile = async (bucketName, keyName, downloadPath) => {
    try {
-      const path = await repository.downloadFile(filePath, bucketName, keyName);
-      return { success: true, path };
-   } catch (err) {
-      console.error("Erro ao fazer download:", err.message);
-      throw new Error("Erro ao fazer download: " + err.message);
+      if (!bucketName || !keyName || !downloadPath) {
+         throw new Error("Parâmetros internos ausentes");
+      }
+
+      const params = { Bucket: bucketName, Key: keyName };
+      const data = await s3.getObject(params).promise();
+
+      fs.mkdirSync(path.dirname(downloadPath), { recursive: true });
+      fs.writeFileSync(downloadPath, data.Body);
+
+      return downloadPath;
+   } catch (error) {
+      throw new Error("Falha no download: " + error.message);
    }
 };
 
